@@ -16,11 +16,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    customgraphicsitem.cpp \
+    customgraphicsscene.cpp \
+    findpathworker.cpp \
     main.cpp \
     findpathmain.cpp
 
 HEADERS += \
-    findpathmain.h
+    customgraphicsitem.h \
+    customgraphicsscene.h \
+    findpathmain.h \
+    findpathworker.h
 
 FORMS += \
     findpathmain.ui

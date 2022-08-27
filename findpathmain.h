@@ -6,6 +6,11 @@
 #include <QGraphicsScene>
 #include <QMap>
 #include <QVector>
+#include <QThread>
+
+#include "customgraphicsscene.h"
+#include "customgraphicsitem.h"
+#include "findpathworker.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class FindPathMain; }
@@ -19,18 +24,33 @@ public:
   explicit FindPathMain(QWidget *parent = nullptr);
   ~FindPathMain();
 
+signals:
+
 private slots:
   void on_pB_generate_clicked();
+  void on_pB_findPath_clicked();
+  void choosePoint(QPointF point);
 
 private:
   void randFillFields(int width, int height);
 private:
   Ui::FindPathMain *ui;
-  QGraphicsScene *scene;
+//  QGraphicsScene *scene;
+  CustomGraphicsScene *scene;
+  FindPathWorker*worker;
+  QThread *threadWorker;
 
-  QMultiMap<int, QMap<int,QGraphicsRectItem*>> m_itemsScene;
+
+  QMultiMap<int, QMap<int,CustomGraphicsItem*>> m_itemsScene;
   int m_width;
   int m_height;
 
+  int m_stepHeight;
+  int m_stepWidth;
+
+  bool m_pointStartExists;
+  bool m_pointFinishExists;
+
 };
+
 #endif // FINDPATHMAIN_H
