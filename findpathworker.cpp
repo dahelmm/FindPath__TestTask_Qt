@@ -35,7 +35,6 @@ void FindPathWorker::findPath()
     CustomGraphicsItem * itemTmp = m_queue.dequeue();
     if(itemTmp == m_finishItem)
     {
-      m_path.append(m_finishItem);
       helpFunction(itemTmp);
       return;
     }
@@ -46,13 +45,14 @@ void FindPathWorker::findPath()
       if(!m_viewed.contains(item) && !m_queue.contains(item))
       {
         item->setParentInGraph(itemTmp->getNumber());
-
+        item->setBrush(QColor(Qt::blue));
         m_queue.enqueue(item);
       }
     }
-    m_viewed.append(itemTmp);
 
+    m_viewed.append(itemTmp);
   }
+  emit findError();
 }
 
 void FindPathWorker::helpFunction(CustomGraphicsItem * currentItem)
@@ -64,7 +64,6 @@ void FindPathWorker::helpFunction(CustomGraphicsItem * currentItem)
   }
   else
   {
-    m_path.append(m_startItem);
     emit findPathFinished(m_path);
   }
 }

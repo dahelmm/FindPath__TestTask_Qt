@@ -19,7 +19,7 @@ class FindPathWorker : public QObject
 
 signals:
   void findPathFinished(const QList<CustomGraphicsItem*>&);
-
+  void findError();
 private:
   void helpFunction(CustomGraphicsItem *finishItem);
 public:

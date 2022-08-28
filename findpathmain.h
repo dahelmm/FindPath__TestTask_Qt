@@ -25,13 +25,12 @@ public:
   ~FindPathMain();
 
 signals:
-
 private slots:
   void on_pB_generate_clicked();
   void on_pB_findPath_clicked();
   void choosePoint(QPointF point);
   void findParhFinished(const QList<CustomGraphicsItem*>& data);
-
+  void findError();
 
 private:
   void randFillFields(int width, int height);
