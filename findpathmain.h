@@ -30,9 +30,14 @@ private slots:
   void on_pB_generate_clicked();
   void on_pB_findPath_clicked();
   void choosePoint(QPointF point);
+  void findParhFinished(int result);
+
+  void on_pushButton_clicked();
 
 private:
   void randFillFields(int width, int height);
+  void fillSosedi();
+
 private:
   Ui::FindPathMain *ui;
 //  QGraphicsScene *scene;

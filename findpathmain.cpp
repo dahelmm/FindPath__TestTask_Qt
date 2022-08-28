@@ -35,8 +35,11 @@ void FindPathMain::on_pB_generate_clicked()
     QMessageBox::critical(this, "Ошибка", "Введите значения ширины и высоты");
     return;
   }
+  CustomGraphicsItem *item;
   scene->clear();
   m_itemsScene.clear();
+  m_pointStartExists = false;
+  m_pointFinishExists = false;
   m_stepHeight = ui->gV_field->height() / m_height;
   m_stepWidth = ui->gV_field->width() / m_width;
   QPen pen(Qt::SolidLine);
@@ -45,15 +48,16 @@ void FindPathMain::on_pB_generate_clicked()
   {
     for(int j = 0; j < m_width; j++)
     {
-
-      CustomGraphicsItem *item = static_cast<CustomGraphicsItem*>(scene->addRect(QRect(j*m_stepWidth, i*m_stepHeight, m_stepWidth, m_stepHeight),pen, brush));
+      item = new CustomGraphicsItem;
+      item->setRect(j*m_stepWidth, i*m_stepHeight, m_stepWidth, m_stepHeight);
+      item->setNumber((i*m_width)+(j+1));
       item->setObstacle(false);
       rowItems.insert(j, item);
+      scene->addItem(item);
     }
     m_itemsScene.insert(i,rowItems);
   }
   randFillFields(m_width,m_height);
-
 }
 
 void FindPathMain::randFillFields(int width, int height)
@@ -69,6 +73,135 @@ void FindPathMain::randFillFields(int width, int height)
   }
 }
 
+void FindPathMain::fillSosedi()
+{
+  CustomGraphicsItem *itemUP;
+  CustomGraphicsItem *itemLeft;
+  CustomGraphicsItem *itemRight;
+  CustomGraphicsItem *itemDown;
+  QVector<int> tmpSosedi;
+
+  for(int i = 0; i < m_height; i++)
+  {
+    for(int j = 0; j < m_width; j++)
+    {
+
+      CustomGraphicsItem *item = m_itemsScene.value(i).value(j);
+      tmpSosedi.clear();
+      if(item->getObstacle())
+        continue;
+      if(j != m_width-1)
+        itemRight = m_itemsScene.value(i).value(j+1);
+      if(j != 0)
+        itemLeft = m_itemsScene.value(i).value(j-1);
+      if(i != m_height-1)
+        itemDown = m_itemsScene.value(i+1).value(j);
+      if(i != 0)
+        itemUP = m_itemsScene.value(i-1).value(j);
+
+      if(i==0)
+      {
+        if(j==0)
+        {
+          if(!itemRight->getObstacle())
+            tmpSosedi.append(itemRight->getNumber());
+          if(!itemDown->getObstacle())
+            tmpSosedi.append(itemDown->getNumber());
+          item->setSosedi(tmpSosedi);
+
+          continue;
+        }
+        if(j != m_width-1)
+        {
+          if(!itemRight->getObstacle())
+            tmpSosedi.append(itemRight->getNumber());
+          if(!itemDown->getObstacle())
+            tmpSosedi.append(itemDown->getNumber());
+          if(!itemLeft->getObstacle())
+            tmpSosedi.append(itemLeft->getNumber());
+          item->setSosedi(tmpSosedi);
+          continue;
+        }
+        if(!itemDown->getObstacle())
+          tmpSosedi.append(itemDown->getNumber());
+        if(!itemLeft->getObstacle())
+          tmpSosedi.append(itemLeft->getNumber());
+        item->setSosedi(tmpSosedi);
+        continue;
+      }
+      else
+      {
+        if(i != m_height-1)
+        {
+          if(j == 0)
+          {
+            if(!itemRight->getObstacle())
+              tmpSosedi.append(itemRight->getNumber());
+            if(!itemDown->getObstacle())
+              tmpSosedi.append(itemDown->getNumber());
+            if(!itemUP->getObstacle())
+              tmpSosedi.append(itemUP->getNumber());
+            item->setSosedi(tmpSosedi);
+            continue;
+          }
+          if(j == m_width - 1)
+          {
+            if(!itemLeft->getObstacle())
+              tmpSosedi.append(itemLeft->getNumber());
+            if(!itemDown->getObstacle())
+              tmpSosedi.append(itemDown->getNumber());
+            if(!itemUP->getObstacle())
+              tmpSosedi.append(itemUP->getNumber());
+            item->setSosedi(tmpSosedi);
+            continue;
+          }
+          if(!itemRight->getObstacle())
+            tmpSosedi.append(itemRight->getNumber());
+          if(!itemDown->getObstacle())
+            tmpSosedi.append(itemDown->getNumber());
+          if(!itemLeft->getObstacle())
+            tmpSosedi.append(itemLeft->getNumber());
+          if(!itemUP->getObstacle())
+            tmpSosedi.append(itemUP->getNumber());
+          item->setSosedi(tmpSosedi);
+          continue;
+        }
+        else
+        {
+          if(j == 0)
+          {
+            if(!itemRight->getObstacle())
+              tmpSosedi.append(itemRight->getNumber());
+            if(!itemUP->getObstacle())
+              tmpSosedi.append(itemUP->getNumber());
+            item->setSosedi(tmpSosedi);
+            continue;
+          }
+          if(j == m_width - 1)
+          {
+            if(!itemLeft->getObstacle())
+              tmpSosedi.append(itemLeft->getNumber());
+            if(!itemUP->getObstacle())
+              tmpSosedi.append(itemUP->getNumber());
+            item->setSosedi(tmpSosedi);
+            continue;
+          }
+          if(!itemRight->getObstacle())
+            tmpSosedi.append(itemRight->getNumber());
+          if(!itemLeft->getObstacle())
+            tmpSosedi.append(itemLeft->getNumber());
+          if(!itemUP->getObstacle())
+            tmpSosedi.append(itemUP->getNumber());
+          item->setSosedi(tmpSosedi);
+          continue;
+        }
+      }
+    }
+  }
+}
+
+
+
 void FindPathMain::on_pB_findPath_clicked()
 {
   threadWorker = new QThread(this);
@@ -76,7 +209,7 @@ void FindPathMain::on_pB_findPath_clicked()
   worker->setStartParameters(m_itemsScene);
 //  worker->moveToThread(threadWorker);
   //connect
-
+  connect(worker, &FindPathWorker::findPathFinished, this, &FindPathMain::findParhFinished);
   //  threadWorker->start();
 }
 
@@ -90,8 +223,9 @@ void FindPathMain::choosePoint(QPointF point)
       QMessageBox::critical(this, "Ошибка", "Недопустимая точка, выберите другую");
       return;
     }
-    item->setBrush(QColor(Qt::red));
     m_pointStartExists = true;
+    item->setIsStart(m_pointStartExists);
+    item->setBrush(QColor(Qt::red));
   }
   else if(!m_pointFinishExists)
   {
@@ -101,11 +235,26 @@ void FindPathMain::choosePoint(QPointF point)
       QMessageBox::critical(this, "Ошибка", "Недопустимая точка, выберите другую");
       return;
     }
-    item->setBrush(QColor(153,56,0));
     m_pointFinishExists = true;
+    item->setIsFinish(m_pointFinishExists);
+    item->setBrush(QColor(153,56,0));
   }
   else
   {
     QMessageBox::information(this, "Ошибка", "Все точки заданы, нажмите \"Найти путь\"");
   }
+}
+
+void FindPathMain::findParhFinished(int result)
+{
+  if(!result)
+  {
+    QMessageBox::information(this, "Поиск закончен", "Начало совпадает с концом");
+    return;
+  }
+}
+
+void FindPathMain::on_pushButton_clicked()
+{
+    fillSosedi();
 }
