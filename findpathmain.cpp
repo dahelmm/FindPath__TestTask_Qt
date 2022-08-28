@@ -12,7 +12,6 @@ FindPathMain::FindPathMain(QWidget *parent)
   , m_pointFinishExists(false)
 {
   qRegisterMetaType<QList<CustomGraphicsItem*>>();
-
   ui->setupUi(this);
   scene = new CustomGraphicsScene();
   ui->gV_field->setScene(scene);
@@ -79,6 +78,7 @@ void FindPathMain::randFillFields(int width, int height)
   }
 }
 
+//функция для создания графа из заполненного поля. Создана мной, не оптимизированна. Сделана по принципу "лишь бы работало"
 void FindPathMain::fillSosedi()
 {
   CustomGraphicsItem *itemUP;
@@ -91,9 +91,9 @@ void FindPathMain::fillSosedi()
   {
     for(int j = 0; j < m_width; j++)
     {
-
       CustomGraphicsItem *item = m_itemsScene.value(i).value(j);
       tmpSosedi.clear();
+
       if(item->getObstacle())
         continue;
       if(j != m_width-1)
@@ -114,7 +114,6 @@ void FindPathMain::fillSosedi()
           if(!itemDown->getObstacle())
             tmpSosedi.append(itemDown->getNumber());
           item->setSosedi(tmpSosedi);
-
           continue;
         }
         if(j != m_width-1)
@@ -257,7 +256,6 @@ void FindPathMain::choosePoint(QPointF point)
 
 void FindPathMain::findParhFinished(const QList<CustomGraphicsItem *> &data)
 {
-
   foreach(auto*item, data)
   {
     item->setBrush(QColor(Qt::red));
