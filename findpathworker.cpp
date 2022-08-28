@@ -1,52 +1,72 @@
 #include "findpathworker.h"
 
 #include <QMessageBox>
+#include <QDebug>
 
-void FindPathWorker::findPath()
-{
-  if(m_startItem->getPointStart() == m_finishItem->getPointFinish())
-  {
-    emit findPathFinished(0);
-    return;
-  }
-  QPointF start = m_startItem->getPointStart();
-  QPointF finish = m_finishItem->getPointFinish();
-  m_startItem->setVisited(true);
-  m_path.append(m_startItem);
-  int resX = start.x()-finish.x();
-  int resY = start.y()-finish.y();
-  if(start.x()>=0 && start.y()>=0)
-  {
-
-  }
-  CustomGraphicsItem *itemTmp;
-//  if(m_itemsScene.contains(start.y(),QMap<start.x(),value(start.y()).value(start.x()-1))
-//  itemTmp = ;
-  if(!itemTmp->getObstacle())
-    m_queue.append(itemTmp);
-}
-
-void FindPathWorker::DFS()
-{
-
-}
 
 FindPathWorker::FindPathWorker(QObject *parent) :
   QObject(parent),
   m_stepWidth(0),
   m_stepHeight(0)
 {
-
+  m_queue.clear();
+  m_path.clear();
+  m_viewed.clear();
 }
 
 FindPathWorker::~FindPathWorker()
 {
+  qRegisterMetaType<QList<CustomGraphicsItem*>>();
 
 }
 
-void FindPathWorker::process()
-{
 
+
+void FindPathWorker::findPath()
+{
+  m_queue.append(m_startItem);
+  QVector<int> sosediTmp;
+  while(!m_queue.isEmpty())
+  {
+    QThread::msleep(50);
+    qApp->processEvents();
+    qDebug()<<"Thread two is work";
+    sosediTmp.clear();
+    CustomGraphicsItem * itemTmp = m_queue.dequeue();
+    if(itemTmp == m_finishItem)
+    {
+      m_path.append(m_finishItem);
+      helpFunction(itemTmp);
+      return;
+    }
+    sosediTmp = itemTmp->getSosedi();
+    for(int i =0; i<sosediTmp.count(); i++)
+    {
+      CustomGraphicsItem *item = m_itemsScene.value(sosediTmp[i]);
+      if(!m_viewed.contains(item) && !m_queue.contains(item))
+      {
+        item->setParentInGraph(itemTmp->getNumber());
+
+        m_queue.enqueue(item);
+      }
+    }
+    m_viewed.append(itemTmp);
+
+  }
+}
+
+void FindPathWorker::helpFunction(CustomGraphicsItem * currentItem)
+{
+  if(currentItem->getParentInGraph() != m_startItem->getNumber())
+  {
+    m_path.append(m_itemsScene.value(currentItem->getParentInGraph()));
+    helpFunction(m_itemsScene.value(currentItem->getParentInGraph()));
+  }
+  else
+  {
+    m_path.append(m_startItem);
+    emit findPathFinished(m_path);
+  }
 }
 
 int FindPathWorker::getStepWidth() const
@@ -69,26 +89,11 @@ void FindPathWorker::setStepHeight(int stepHeight)
   m_stepHeight = stepHeight;
 }
 
-void FindPathWorker::setStartParameters(const QMultiMap<int, QMap<int,CustomGraphicsItem*>> &itemsScene)
+void FindPathWorker::setStartParameters(QMap<int, CustomGraphicsItem *> &items, CustomGraphicsItem *start, CustomGraphicsItem *finish)
 {
-  m_itemsScene = itemsScene;
-  QMap<int, CustomGraphicsItem*> itemsTmp;
-  for(int i = 0; i < itemsScene.values().count(); i++)
-  {
-    itemsTmp = itemsScene.value(i);
-    for(int j = 0; j < itemsTmp.count(); j++)
-    {
-      if(itemsTmp.value(j)->getIsStart())
-      {
-        m_startItem = itemsTmp.value(j);
-        m_startItem->setPointStart(QPointF(j, i));
-      }
-      if(itemsTmp.value(j)->getIsFinish())
-      {
-        m_finishItem= itemsTmp.value(j);
-        m_finishItem->setPointFinish(QPointF(j, i));
-      }
-    }
-  }
+  m_itemsScene = items;
+  m_startItem = start;
+  m_finishItem = finish;
 }
+
 

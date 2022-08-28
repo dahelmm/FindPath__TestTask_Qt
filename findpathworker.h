@@ -4,6 +4,9 @@
 #include <QObject>
 #include <QPointF>
 #include <QQueue>
+#include <QStack>
+#include <QThread>
+#include <QApplication>
 
 #include "customgraphicsitem.h"
 
@@ -15,34 +18,40 @@ class FindPathWorker : public QObject
   Q_PROPERTY(int stepHeight READ getStepHeight WRITE setStepHeight)
 
 signals:
-  void findPathFinished(int);
+  void findPathFinished(const QList<CustomGraphicsItem*>&);
 
 private:
-  void findPath();
-  void DFS();
+  void helpFunction(CustomGraphicsItem *finishItem);
 public:
   explicit FindPathWorker(QObject *parent = nullptr);
   ~FindPathWorker();
 
-  void process();
 
   int getStepWidth() const;
   int getStepHeight() const;
 
 public slots:
+  void findPath();
+
   void setStepWidth(int stepWidth);
   void setStepHeight(int stepHeight);
-  void setStartParameters(const QMultiMap<int, QMap<int,CustomGraphicsItem*>> &itemsScene);
+  void setStartParameters(QMap<int, CustomGraphicsItem *> &items, CustomGraphicsItem *start, CustomGraphicsItem *finish);
 
 private:
   CustomGraphicsItem *m_startItem;
   CustomGraphicsItem *m_finishItem;
-  QQueue<CustomGraphicsItem*> m_queue;
 
+  QQueue <CustomGraphicsItem*> m_queue;
+  QList<CustomGraphicsItem*> m_viewed;
   QList<CustomGraphicsItem*> m_path;
+
+  QQueue<int> m_queueInt;
+  QList<int> m_viewedInt;
+  QList<int> m_pathInt;
+
   int m_stepWidth;
   int m_stepHeight;
-  QMultiMap<int, QMap<int,CustomGraphicsItem*>> m_itemsScene;
+  QMap<int,CustomGraphicsItem*> m_itemsScene;
 };
 
 #endif // FINDPATHWORKER_H

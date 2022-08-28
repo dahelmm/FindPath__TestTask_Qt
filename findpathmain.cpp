@@ -11,6 +11,7 @@ FindPathMain::FindPathMain(QWidget *parent)
   , m_pointStartExists(false)
   , m_pointFinishExists(false)
 {
+
   ui->setupUi(this);
   scene = new CustomGraphicsScene();
   ui->gV_field->setScene(scene);
@@ -48,16 +49,20 @@ void FindPathMain::on_pB_generate_clicked()
   {
     for(int j = 0; j < m_width; j++)
     {
+
       item = new CustomGraphicsItem;
       item->setRect(j*m_stepWidth, i*m_stepHeight, m_stepWidth, m_stepHeight);
       item->setNumber((i*m_width)+(j+1));
       item->setObstacle(false);
       rowItems.insert(j, item);
+      m_mapItemsScene.insert((i*m_width)+(j+1), item);
       scene->addItem(item);
     }
     m_itemsScene.insert(i,rowItems);
   }
   randFillFields(m_width,m_height);
+  fillSosedi();
+
 }
 
 void FindPathMain::randFillFields(int width, int height)
@@ -206,11 +211,15 @@ void FindPathMain::on_pB_findPath_clicked()
 {
   threadWorker = new QThread(this);
   worker = new FindPathWorker;
-  worker->setStartParameters(m_itemsScene);
-//  worker->moveToThread(threadWorker);
+  worker->setStartParameters(m_mapItemsScene, m_startField, m_finishField);
+  worker->moveToThread(threadWorker);
   //connect
-  connect(worker, &FindPathWorker::findPathFinished, this, &FindPathMain::findParhFinished);
-  //  threadWorker->start();
+  connect(threadWorker, &QThread::started, worker, &FindPathWorker::findPath);
+  connect(worker, &FindPathWorker::findPathFinished, this, &FindPathMain::findParhFinished, Qt::QueuedConnection);
+  connect(worker, &FindPathWorker::findPathFinished, threadWorker, &QThread::terminate);
+  connect(worker, &FindPathWorker::findPathFinished, threadWorker, &QThread::deleteLater);
+  connect(worker, &FindPathWorker::findPathFinished, worker, &FindPathWorker::deleteLater);
+    threadWorker->start();
 }
 
 void FindPathMain::choosePoint(QPointF point)
@@ -224,6 +233,7 @@ void FindPathMain::choosePoint(QPointF point)
       return;
     }
     m_pointStartExists = true;
+    m_startField = item;
     item->setIsStart(m_pointStartExists);
     item->setBrush(QColor(Qt::red));
   }
@@ -236,6 +246,7 @@ void FindPathMain::choosePoint(QPointF point)
       return;
     }
     m_pointFinishExists = true;
+    m_finishField = item;
     item->setIsFinish(m_pointFinishExists);
     item->setBrush(QColor(153,56,0));
   }
@@ -245,16 +256,11 @@ void FindPathMain::choosePoint(QPointF point)
   }
 }
 
-void FindPathMain::findParhFinished(int result)
+void FindPathMain::findParhFinished(const QList<CustomGraphicsItem *> &data)
 {
-  if(!result)
+  foreach(auto*item, data)
   {
-    QMessageBox::information(this, "Поиск закончен", "Начало совпадает с концом");
-    return;
+    item->setBrush(QColor(Qt::red));
   }
 }
 
-void FindPathMain::on_pushButton_clicked()
-{
-    fillSosedi();
-}

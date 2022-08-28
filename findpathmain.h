@@ -30,9 +30,8 @@ private slots:
   void on_pB_generate_clicked();
   void on_pB_findPath_clicked();
   void choosePoint(QPointF point);
-  void findParhFinished(int result);
+  void findParhFinished(const QList<CustomGraphicsItem*>& data);
 
-  void on_pushButton_clicked();
 
 private:
   void randFillFields(int width, int height);
@@ -45,8 +44,11 @@ private:
   FindPathWorker*worker;
   QThread *threadWorker;
 
+  CustomGraphicsItem * m_startField;
+  CustomGraphicsItem * m_finishField;
 
   QMultiMap<int, QMap<int,CustomGraphicsItem*>> m_itemsScene;
+  QMap<int, CustomGraphicsItem*> m_mapItemsScene;
   int m_width;
   int m_height;
 

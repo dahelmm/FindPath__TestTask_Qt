@@ -9,14 +9,15 @@
 class CustomGraphicsItem : public QObject, public QGraphicsRectItem
 {
   Q_OBJECT
-  Q_PROPERTY(bool obstacle READ getObstacle WRITE setObstacle)
-  Q_PROPERTY(bool isStart READ getIsStart WRITE setIsStart)
-  Q_PROPERTY(bool isFinish READ getIsFinish WRITE setIsFinish)
-  Q_PROPERTY(QPointF pointStart READ getPointStart WRITE setPointStart)
-  Q_PROPERTY(QPointF pointFinish READ getPointFinish WRITE setPointFinish)
-  Q_PROPERTY(bool visited READ getVisited WRITE setVisited)
-  Q_PROPERTY(int number READ getNumber WRITE setNumber)
-  Q_PROPERTY(QVector<int> sosedi READ getSosedi WRITE setSosedi)
+//  Q_PROPERTY(bool obstacle READ getObstacle WRITE setObstacle)
+//  Q_PROPERTY(bool isStart READ getIsStart WRITE setIsStart)
+//  Q_PROPERTY(bool isFinish READ getIsFinish WRITE setIsFinish)
+//  Q_PROPERTY(QPointF pointStart READ getPointStart WRITE setPointStart)
+//  Q_PROPERTY(QPointF pointFinish READ getPointFinish WRITE setPointFinish)
+//  Q_PROPERTY(bool visited READ getVisited WRITE setVisited)
+//  Q_PROPERTY(int number READ getNumber WRITE setNumber)
+//  Q_PROPERTY(QVector<int> sosedi READ getSosedi WRITE setSosedi)
+//  Q_PROPERTY(int parentInGraph READ getParentInGraph WRITE setParentInGraph)
 public:
   explicit CustomGraphicsItem(QObject *parent = nullptr);
       ~CustomGraphicsItem();
@@ -29,6 +30,7 @@ public:
   bool getVisited() const;
   int getNumber() const;
   QVector<int> getSosedi() const;
+  int getParentInGraph() const;
 
 public slots:
   void setObstacle(bool obstacle);
@@ -39,6 +41,7 @@ public slots:
   void setVisited(bool visited);
   void setNumber(int number);
   void setSosedi(QVector<int> sosedi);
+  void setParentInGraph(int parentInGraph);
 
 private:
 
@@ -54,7 +57,9 @@ private:
 
   int m_width;
   int m_height;
+  int m_parentInGraph;
 };
 
+Q_DECLARE_METATYPE(QList<CustomGraphicsItem*>)
 
 #endif // CUSTOMGRAPHICSITEM_H

@@ -15,7 +15,20 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="4" column="0">
+    <item row="3" column="2">
+     <spacer name="horizontalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>72</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="3" column="0">
      <spacer name="horizontalSpacer">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -28,7 +41,32 @@
       </property>
      </spacer>
     </item>
-    <item row="0" column="0" rowspan="4" colspan="5">
+    <item row="3" column="1">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="l_width">
+        <property name="text">
+         <string>Width:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="lE_width">
+        <property name="text">
+         <string>10</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="1" column="5">
+     <widget class="QPushButton" name="pB_findPath">
+      <property name="text">
+       <string>Найти путь</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0" rowspan="3" colspan="5">
      <widget class="QGraphicsView" name="gV_field">
       <property name="minimumSize">
        <size>
@@ -50,7 +88,7 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="5">
+    <item row="2" column="5">
      <spacer name="verticalSpacer">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
@@ -63,58 +101,14 @@
       </property>
      </spacer>
     </item>
-    <item row="4" column="1">
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QLabel" name="l_width">
-        <property name="text">
-         <string>Width:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="lE_width">
-        <property name="text">
-         <string>10</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="4" column="2">
-     <spacer name="horizontalSpacer_2">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>72</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="4" column="4">
-     <spacer name="horizontalSpacer_3">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>73</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="1" column="5">
-     <widget class="QPushButton" name="pB_findPath">
+    <item row="0" column="5">
+     <widget class="QPushButton" name="pB_generate">
       <property name="text">
-       <string>Найти путь</string>
+       <string>Генерировать</string>
       </property>
      </widget>
     </item>
-    <item row="4" column="3">
+    <item row="3" column="3">
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <widget class="QLabel" name="l_height">
@@ -132,19 +126,18 @@
       </item>
      </layout>
     </item>
-    <item row="0" column="5">
-     <widget class="QPushButton" name="pB_generate">
-      <property name="text">
-       <string>Генерировать</string>
+    <item row="3" column="4">
+     <spacer name="horizontalSpacer_3">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
       </property>
-     </widget>
-    </item>
-    <item row="2" column="5">
-     <widget class="QPushButton" name="pushButton">
-      <property name="text">
-       <string>PushButton</string>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>73</width>
+        <height>20</height>
+       </size>
       </property>
-     </widget>
+     </spacer>
     </item>
    </layout>
   </widget>

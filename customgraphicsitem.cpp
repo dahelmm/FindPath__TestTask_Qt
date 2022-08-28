@@ -6,8 +6,7 @@ CustomGraphicsItem::CustomGraphicsItem(QObject *parent) :
   m_obstacle(false),
   m_isStart(false),
   m_isFinish(false),
-  m_visited(false)/*,
-  m_number(0)*/
+  m_visited(false)
 {
 
 }
@@ -57,6 +56,11 @@ QVector<int> CustomGraphicsItem::getSosedi() const
   return m_sosedi;
 }
 
+int CustomGraphicsItem::getParentInGraph() const
+{
+  return m_parentInGraph;
+}
+
 
 
 void CustomGraphicsItem::setObstacle(bool obstacle)
@@ -97,6 +101,11 @@ void CustomGraphicsItem::setNumber(int number)
 void CustomGraphicsItem::setSosedi(QVector<int> sosedi)
 {
   m_sosedi = sosedi;
+}
+
+void CustomGraphicsItem::setParentInGraph(int parentInGraph)
+{
+  m_parentInGraph = parentInGraph;
 }
 
 
