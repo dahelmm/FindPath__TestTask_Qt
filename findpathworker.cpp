@@ -45,6 +45,7 @@ void FindPathWorker::findPath()
       if(!m_viewed.contains(item) && !m_queue.contains(item))
       {
         item->setParentInGraph(itemTmp->getNumber());
+        m_fillFields.append(item);
         item->setBrush(QColor(Qt::blue));
         m_queue.enqueue(item);
       }
@@ -64,6 +65,7 @@ void FindPathWorker::helpFunction(CustomGraphicsItem * currentItem)
   }
   else
   {
+    emit clearBlueFields(m_fillFields);
     emit findPathFinished(m_path);
   }
 }

@@ -19,6 +19,7 @@ class FindPathWorker : public QObject
 
 signals:
   void findPathFinished(const QList<CustomGraphicsItem*>&);
+  void clearBlueFields(const QList<CustomGraphicsItem*>&);
   void findError();
 private:
   void helpFunction(CustomGraphicsItem *finishItem);
@@ -44,6 +45,8 @@ private:
   QQueue <CustomGraphicsItem*> m_queue;
   QList<CustomGraphicsItem*> m_viewed;
   QList<CustomGraphicsItem*> m_path;
+
+  QList<CustomGraphicsItem*> m_fillFields;
 
   QQueue<int> m_queueInt;
   QList<int> m_viewedInt;

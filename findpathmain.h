@@ -31,6 +31,7 @@ private slots:
   void choosePoint(QPointF point);
   void findParhFinished(const QList<CustomGraphicsItem*>& data);
   void findError();
+  void clearBlueFields(const QList<CustomGraphicsItem*>&data);
 
 private:
   void randFillFields(int width, int height);

@@ -11,6 +11,7 @@ FindPathMain::FindPathMain(QWidget *parent)
   , m_pointStartExists(false)
   , m_pointFinishExists(false)
 {
+  qRegisterMetaType<QList<CustomGraphicsItem*>>();
 
   ui->setupUi(this);
   scene = new CustomGraphicsScene();
@@ -205,27 +206,21 @@ void FindPathMain::fillSosedi()
   }
 }
 
-
-
 void FindPathMain::on_pB_findPath_clicked()
 {
   threadWorker = new QThread(this);
   worker = new FindPathWorker;
   worker->setStartParameters(m_mapItemsScene, m_startField, m_finishField);
   worker->moveToThread(threadWorker);
-  //connect
+
   connect(threadWorker, &QThread::started, worker, &FindPathWorker::findPath);
   connect(worker, &FindPathWorker::findError, this, &FindPathMain::findError);
   connect(worker, &FindPathWorker::findPathFinished, this, &FindPathMain::findParhFinished, Qt::QueuedConnection);
+  connect(worker, &FindPathWorker::clearBlueFields, this, &FindPathMain::clearBlueFields);
   connect(worker, &FindPathWorker::findPathFinished, threadWorker, &QThread::terminate);
   connect(worker, &FindPathWorker::findPathFinished, threadWorker, &QThread::deleteLater);
   connect(worker, &FindPathWorker::findPathFinished, worker, &FindPathWorker::deleteLater);
-//  connect(worker, &FindPathWorker::findError, threadWorker, &QThread::terminate);
-//  connect(worker, &FindPathWorker::findError, threadWorker, &QThread::deleteLater);
-//  connect(worker, &FindPathWorker::findError, worker, &FindPathWorker::deleteLater);
   threadWorker->start();
-
-
 }
 
 void FindPathMain::choosePoint(QPointF point)
@@ -240,7 +235,6 @@ void FindPathMain::choosePoint(QPointF point)
     }
     m_pointStartExists = true;
     m_startField = item;
-    item->setIsStart(m_pointStartExists);
     item->setBrush(QColor(255,221,30));
   }
   else if(!m_pointFinishExists)
@@ -253,7 +247,6 @@ void FindPathMain::choosePoint(QPointF point)
     }
     m_pointFinishExists = true;
     m_finishField = item;
-    item->setIsFinish(m_pointFinishExists);
     item->setBrush(QColor(216,116,252));
   }
   else
@@ -268,15 +261,21 @@ void FindPathMain::findParhFinished(const QList<CustomGraphicsItem *> &data)
   foreach(auto*item, data)
   {
     item->setBrush(QColor(Qt::red));
-//    QThread::msleep(500);
   }
   m_startField->setBrush(QColor(255,221,30));
   m_finishField->setBrush(QColor(216,116,252));
-
 }
 
 void FindPathMain::findError()
 {
   QMessageBox::critical(this, "Ошибка", "Не найден путь");
+}
+
+void FindPathMain::clearBlueFields(const QList<CustomGraphicsItem *> &data)
+{
+  foreach(auto*item, data)
+  {
+    item->setBrush(QColor(Qt::white));
+  }
 }
 
