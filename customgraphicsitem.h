@@ -11,7 +11,7 @@ class CustomGraphicsItem : public QObject, public QGraphicsRectItem
   Q_OBJECT
   Q_PROPERTY(bool obstacle READ getObstacle WRITE setObstacle)
   Q_PROPERTY(int number READ getNumber WRITE setNumber)
-  Q_PROPERTY(QVector<int> sosedi READ getSosedi WRITE setSosedi)
+  Q_PROPERTY(QVector<int> neighbors READ getNeighbors WRITE setNeighbors)
   Q_PROPERTY(int parentInGraph READ getParentInGraph WRITE setParentInGraph)
 public:
   explicit CustomGraphicsItem(QObject *parent = nullptr);
@@ -19,21 +19,20 @@ public:
 
   bool getObstacle() const;
   int getNumber() const;
-  QVector<int> getSosedi() const;
+  QVector<int> getNeighbors() const;
   int getParentInGraph() const;
 
 public slots:
   void setObstacle(bool obstacle);
   void setNumber(int number);
-  void setSosedi(QVector<int> sosedi);
+  void setNeighbors(QVector<int> neighbors);
   void setParentInGraph(int parentInGraph);
 
 private:
 
   bool m_obstacle;
-  QList<CustomGraphicsItem*> m_neighbors;
   int m_number = 0;
-  QVector<int> m_sosedi;
+  QVector<int> m_neighbors;
 
   int m_width;
   int m_height;

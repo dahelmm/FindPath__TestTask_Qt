@@ -85,14 +85,14 @@ void FindPathMain::fillSosedi()
   CustomGraphicsItem *itemLeft;
   CustomGraphicsItem *itemRight;
   CustomGraphicsItem *itemDown;
-  QVector<int> tmpSosedi;
+  QVector<int> neighbors;
 
   for(int i = 0; i < m_height; i++)
   {
     for(int j = 0; j < m_width; j++)
     {
       CustomGraphicsItem *item = m_itemsScene.value(i).value(j);
-      tmpSosedi.clear();
+      neighbors.clear();
 
       if(item->getObstacle())
         continue;
@@ -110,28 +110,28 @@ void FindPathMain::fillSosedi()
         if(j==0)
         {
           if(!itemRight->getObstacle())
-            tmpSosedi.append(itemRight->getNumber());
+            neighbors.append(itemRight->getNumber());
           if(!itemDown->getObstacle())
-            tmpSosedi.append(itemDown->getNumber());
-          item->setSosedi(tmpSosedi);
+            neighbors.append(itemDown->getNumber());
+          item->setNeighbors(neighbors);
           continue;
         }
         if(j != m_width-1)
         {
           if(!itemRight->getObstacle())
-            tmpSosedi.append(itemRight->getNumber());
+            neighbors.append(itemRight->getNumber());
           if(!itemDown->getObstacle())
-            tmpSosedi.append(itemDown->getNumber());
+            neighbors.append(itemDown->getNumber());
           if(!itemLeft->getObstacle())
-            tmpSosedi.append(itemLeft->getNumber());
-          item->setSosedi(tmpSosedi);
+            neighbors.append(itemLeft->getNumber());
+          item->setNeighbors(neighbors);
           continue;
         }
         if(!itemDown->getObstacle())
-          tmpSosedi.append(itemDown->getNumber());
+          neighbors.append(itemDown->getNumber());
         if(!itemLeft->getObstacle())
-          tmpSosedi.append(itemLeft->getNumber());
-        item->setSosedi(tmpSosedi);
+          neighbors.append(itemLeft->getNumber());
+        item->setNeighbors(neighbors);
         continue;
       }
       else
@@ -141,34 +141,34 @@ void FindPathMain::fillSosedi()
           if(j == 0)
           {
             if(!itemRight->getObstacle())
-              tmpSosedi.append(itemRight->getNumber());
+              neighbors.append(itemRight->getNumber());
             if(!itemDown->getObstacle())
-              tmpSosedi.append(itemDown->getNumber());
+              neighbors.append(itemDown->getNumber());
             if(!itemUP->getObstacle())
-              tmpSosedi.append(itemUP->getNumber());
-            item->setSosedi(tmpSosedi);
+              neighbors.append(itemUP->getNumber());
+            item->setNeighbors(neighbors);
             continue;
           }
           if(j == m_width - 1)
           {
             if(!itemLeft->getObstacle())
-              tmpSosedi.append(itemLeft->getNumber());
+              neighbors.append(itemLeft->getNumber());
             if(!itemDown->getObstacle())
-              tmpSosedi.append(itemDown->getNumber());
+              neighbors.append(itemDown->getNumber());
             if(!itemUP->getObstacle())
-              tmpSosedi.append(itemUP->getNumber());
-            item->setSosedi(tmpSosedi);
+              neighbors.append(itemUP->getNumber());
+            item->setNeighbors(neighbors);
             continue;
           }
           if(!itemRight->getObstacle())
-            tmpSosedi.append(itemRight->getNumber());
+            neighbors.append(itemRight->getNumber());
           if(!itemDown->getObstacle())
-            tmpSosedi.append(itemDown->getNumber());
+            neighbors.append(itemDown->getNumber());
           if(!itemLeft->getObstacle())
-            tmpSosedi.append(itemLeft->getNumber());
+            neighbors.append(itemLeft->getNumber());
           if(!itemUP->getObstacle())
-            tmpSosedi.append(itemUP->getNumber());
-          item->setSosedi(tmpSosedi);
+            neighbors.append(itemUP->getNumber());
+          item->setNeighbors(neighbors);
           continue;
         }
         else
@@ -176,28 +176,28 @@ void FindPathMain::fillSosedi()
           if(j == 0)
           {
             if(!itemRight->getObstacle())
-              tmpSosedi.append(itemRight->getNumber());
+              neighbors.append(itemRight->getNumber());
             if(!itemUP->getObstacle())
-              tmpSosedi.append(itemUP->getNumber());
-            item->setSosedi(tmpSosedi);
+              neighbors.append(itemUP->getNumber());
+            item->setNeighbors(neighbors);
             continue;
           }
           if(j == m_width - 1)
           {
             if(!itemLeft->getObstacle())
-              tmpSosedi.append(itemLeft->getNumber());
+              neighbors.append(itemLeft->getNumber());
             if(!itemUP->getObstacle())
-              tmpSosedi.append(itemUP->getNumber());
-            item->setSosedi(tmpSosedi);
+              neighbors.append(itemUP->getNumber());
+            item->setNeighbors(neighbors);
             continue;
           }
           if(!itemRight->getObstacle())
-            tmpSosedi.append(itemRight->getNumber());
+            neighbors.append(itemRight->getNumber());
           if(!itemLeft->getObstacle())
-            tmpSosedi.append(itemLeft->getNumber());
+            neighbors.append(itemLeft->getNumber());
           if(!itemUP->getObstacle())
-            tmpSosedi.append(itemUP->getNumber());
-          item->setSosedi(tmpSosedi);
+            neighbors.append(itemUP->getNumber());
+          item->setNeighbors(neighbors);
           continue;
         }
       }

@@ -30,22 +30,22 @@ void FindPathWorker::findPath()
     return;
   }
   m_queue.append(m_startItem);
-  QVector<int> sosediTmp;
+  QVector<int> neighbors;
   while(!m_queue.isEmpty())
   {
     QThread::msleep(50);
     qApp->processEvents();
-    sosediTmp.clear();
+    neighbors.clear();
     CustomGraphicsItem * itemTmp = m_queue.dequeue();
     if(itemTmp == m_finishItem)
     {
       helpFunction(itemTmp);
       return;
     }
-    sosediTmp = itemTmp->getSosedi();
-    for(int i =0; i<sosediTmp.count(); i++)
+    neighbors = itemTmp->getNeighbors();
+    for(int i =0; i<neighbors.count(); i++)
     {
-      CustomGraphicsItem *item = m_itemsScene.value(sosediTmp[i]);
+      CustomGraphicsItem *item = m_itemsScene.value(neighbors[i]);
       if(!m_viewed.contains(item) && !m_queue.contains(item))
       {
         item->setParentInGraph(itemTmp->getNumber());

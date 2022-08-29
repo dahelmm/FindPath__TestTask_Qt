@@ -22,24 +22,22 @@ signals:
   void clearBlueFields(const QList<CustomGraphicsItem*>&);
   void findError();
   void findPathFinishedOnePoint();
-private:
-  void helpFunction(CustomGraphicsItem *finishItem);
+
 public:
   explicit FindPathWorker(QObject *parent = nullptr);
   ~FindPathWorker();
-
-
   int getStepWidth() const;
   int getStepHeight() const;
 
 public slots:
   void findPath();
-
   void setStepWidth(int stepWidth);
   void setStepHeight(int stepHeight);
   void setStartParameters(QMap<int, CustomGraphicsItem *> &items, CustomGraphicsItem *start, CustomGraphicsItem *finish);
 
 private:
+  void helpFunction(CustomGraphicsItem *finishItem);
+
   CustomGraphicsItem *m_startItem;
   CustomGraphicsItem *m_finishItem;
 

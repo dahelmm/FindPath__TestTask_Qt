@@ -23,9 +23,9 @@ int CustomGraphicsItem::getNumber() const
   return m_number;
 }
 
-QVector<int> CustomGraphicsItem::getSosedi() const
+QVector<int> CustomGraphicsItem::getNeighbors() const
 {
-  return m_sosedi;
+  return m_neighbors;
 }
 
 int CustomGraphicsItem::getParentInGraph() const
@@ -45,9 +45,9 @@ void CustomGraphicsItem::setNumber(int number)
   m_number = number;
 }
 
-void CustomGraphicsItem::setSosedi(QVector<int> sosedi)
+void CustomGraphicsItem::setNeighbors(QVector<int> neighbors)
 {
-  m_sosedi = sosedi;
+  m_neighbors = neighbors;
 }
 
 void CustomGraphicsItem::setParentInGraph(int parentInGraph)
