@@ -24,6 +24,11 @@ FindPathWorker::~FindPathWorker()
 
 void FindPathWorker::findPath()
 {
+  if(m_startItem == m_finishItem)
+  {
+    emit findPathFinishedOnePoint();
+    return;
+  }
   m_queue.append(m_startItem);
   QVector<int> sosediTmp;
   while(!m_queue.isEmpty())

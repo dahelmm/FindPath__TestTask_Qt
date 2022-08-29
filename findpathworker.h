@@ -21,6 +21,7 @@ signals:
   void findPathFinished(const QList<CustomGraphicsItem*>&);
   void clearBlueFields(const QList<CustomGraphicsItem*>&);
   void findError();
+  void findPathFinishedOnePoint();
 private:
   void helpFunction(CustomGraphicsItem *finishItem);
 public:

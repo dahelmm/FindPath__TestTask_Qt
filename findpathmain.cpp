@@ -214,11 +214,16 @@ void FindPathMain::on_pB_findPath_clicked()
 
   connect(threadWorker, &QThread::started, worker, &FindPathWorker::findPath);
   connect(worker, &FindPathWorker::findError, this, &FindPathMain::findError);
+  connect(worker, &FindPathWorker::findPathFinishedOnePoint, this, &FindPathMain::findPathFinishedOnePoint);
   connect(worker, &FindPathWorker::findPathFinished, this, &FindPathMain::findParhFinished, Qt::QueuedConnection);
   connect(worker, &FindPathWorker::clearBlueFields, this, &FindPathMain::clearBlueFields);
   connect(worker, &FindPathWorker::findPathFinished, threadWorker, &QThread::terminate);
   connect(worker, &FindPathWorker::findPathFinished, threadWorker, &QThread::deleteLater);
   connect(worker, &FindPathWorker::findPathFinished, worker, &FindPathWorker::deleteLater);
+
+  connect(worker, &FindPathWorker::findPathFinishedOnePoint, threadWorker, &QThread::terminate);
+  connect(worker, &FindPathWorker::findPathFinishedOnePoint, threadWorker, &QThread::deleteLater);
+  connect(worker, &FindPathWorker::findPathFinishedOnePoint, worker, &FindPathWorker::deleteLater);
   threadWorker->start();
 }
 
@@ -275,5 +280,11 @@ void FindPathMain::clearBlueFields(const QList<CustomGraphicsItem *> &data)
   {
     item->setBrush(QColor(Qt::white));
   }
+}
+
+void FindPathMain::findPathFinishedOnePoint()
+{
+  QMessageBox::information(this, "Конец", "Точка конца отрезка в точке старта, путь найден");
+
 }
 
