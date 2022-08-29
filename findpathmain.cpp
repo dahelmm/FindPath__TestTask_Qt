@@ -67,7 +67,7 @@ void FindPathMain::on_pB_generate_clicked()
 
 void FindPathMain::randFillFields(int width, int height)
 {
-  int countSquare = (width + height)*2;
+  int countSquare = (width + height)*4;
   QPen pen(Qt::SolidLine);
 
   for(int i = 0; i < countSquare; i++)
@@ -221,6 +221,10 @@ void FindPathMain::on_pB_findPath_clicked()
   connect(worker, &FindPathWorker::findPathFinished, threadWorker, &QThread::deleteLater);
   connect(worker, &FindPathWorker::findPathFinished, worker, &FindPathWorker::deleteLater);
 
+  connect(worker, &FindPathWorker::findError, threadWorker, &QThread::terminate);
+  connect(worker, &FindPathWorker::findError, threadWorker, &QThread::deleteLater);
+  connect(worker, &FindPathWorker::findError, worker, &FindPathWorker::deleteLater);
+
   connect(worker, &FindPathWorker::findPathFinishedOnePoint, threadWorker, &QThread::terminate);
   connect(worker, &FindPathWorker::findPathFinishedOnePoint, threadWorker, &QThread::deleteLater);
   connect(worker, &FindPathWorker::findPathFinishedOnePoint, worker, &FindPathWorker::deleteLater);
@@ -285,6 +289,5 @@ void FindPathMain::clearBlueFields(const QList<CustomGraphicsItem *> &data)
 void FindPathMain::findPathFinishedOnePoint()
 {
   QMessageBox::information(this, "Конец", "Точка конца отрезка в точке старта, путь найден");
-
 }
 

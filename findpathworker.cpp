@@ -35,7 +35,6 @@ void FindPathWorker::findPath()
   {
     QThread::msleep(50);
     qApp->processEvents();
-    qDebug()<<"Thread two is work";
     sosediTmp.clear();
     CustomGraphicsItem * itemTmp = m_queue.dequeue();
     if(itemTmp == m_finishItem)
