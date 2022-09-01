@@ -17,10 +17,7 @@ FindPathWorker::FindPathWorker(QObject *parent) :
 FindPathWorker::~FindPathWorker()
 {
   qRegisterMetaType<QList<CustomGraphicsItem*>>();
-
 }
-
-
 
 void FindPathWorker::findPath()
 {
@@ -33,7 +30,7 @@ void FindPathWorker::findPath()
   QVector<int> neighbors;
   while(!m_queue.isEmpty())
   {
-    QThread::msleep(50);
+    QThread::msleep(1);
     qApp->processEvents();
     neighbors.clear();
     CustomGraphicsItem * itemTmp = m_queue.dequeue();

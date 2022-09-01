@@ -20,6 +20,7 @@ FindPathMain::FindPathMain(QWidget *parent)
 
 FindPathMain::~FindPathMain()
 {
+  delete scene;
   delete ui;
 }
 
