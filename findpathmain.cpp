@@ -10,9 +10,11 @@ FindPathMain::FindPathMain(QWidget *parent)
   : QMainWindow(parent)
   , ui(new Ui::FindPathMain)
   , scene(0)
+  , threadWorker(0)
   , worker(0)
   , m_width(0)
   , m_height(0)
+  , m_fieldPaint(false)
   , m_pointStartExists(false)
   , m_pointFinishExists(false)
 {
@@ -76,6 +78,7 @@ void FindPathMain::on_pB_generate_clicked()
   }
   randFillFields(m_width,m_height);
   fillSosedi();
+  m_fieldPaint = true;
 }
 
 void FindPathMain::randFillFields(int width, int height)
@@ -226,19 +229,49 @@ void FindPathMain::fillSosedi()
 
 void FindPathMain::on_pB_findPath_clicked()
 {
+  if(!m_fieldPaint)
+  {
+    QMessageBox::critical(this, tr("Ошибка"), tr("Сначала нажмите кнопку \"Генерировать\", чтобы отрисовать поле с препятствиями"));
+    return;
+  }
+  if(!m_pointStartExists && !m_pointFinishExists)
+  {
+    QMessageBox::critical(this, tr("Ошибка"), tr("Сначала назначьте точки старта и финиша"));
+    return;
+  }
+  if(threadWorker)
+  {
+    threadWorker->quit();
+    while(!threadWorker->isFinished());
+    threadWorker->deleteLater();
+    threadWorker = 0;
+  }
+  threadWorker = new QThread(this);
   worker = new FindPathWorker;
   worker->setStartParameters(m_mapItemsScene, m_startField, m_finishField);
+  worker->moveToThread(threadWorker);
+
+  connect(threadWorker, &QThread::started, worker, &FindPathWorker::findPath);
 
   connect(worker, &FindPathWorker::findError, this, &FindPathMain::findError);
-  connect(worker, &FindPathWorker::findPathFinishedOnePoint, this, &FindPathMain::findPathFinishedOnePoint);
   connect(worker, &FindPathWorker::findPathFinished, this, &FindPathMain::findParhFinished);
+  connect(worker, &FindPathWorker::findPathFinishedOnePoint, this, &FindPathMain::findPathFinishedOnePoint);
+
   connect(worker, &FindPathWorker::clearBlueFields, this, &FindPathMain::clearBlueFields);
-  connect(worker, &FindPathWorker::findPathFinished, worker, &FindPathWorker::deleteLater);
+
   connect(worker, &FindPathWorker::findError, worker, &FindPathWorker::deleteLater);
+  connect(worker, &FindPathWorker::findPathFinished, worker, &FindPathWorker::deleteLater);
   connect(worker, &FindPathWorker::findPathFinishedOnePoint, worker, &FindPathWorker::deleteLater);
 
-  QtConcurrent::run(worker, &FindPathWorker::findPath);
+  connect(worker, &FindPathWorker::findError, threadWorker, &QThread::quit);
+  connect(worker, &FindPathWorker::findPathFinished, threadWorker, &QThread::quit);
+  connect(worker, &FindPathWorker::findPathFinishedOnePoint, threadWorker, &QThread::quit);
+
+  connect(threadWorker, &QThread::finished, [this](){threadWorker->deleteLater(); threadWorker = 0;});
+
+  threadWorker->start();
 }
+
 
 void FindPathMain::choosePoint(QPointF point)
 {

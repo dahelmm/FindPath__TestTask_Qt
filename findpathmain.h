@@ -41,10 +41,13 @@ private:
   Ui::FindPathMain *ui;
 //  QGraphicsScene *scene;
   CustomGraphicsScene *scene;
+
+  QThread     *threadWorker;
   FindPathWorker*worker;
 
   CustomGraphicsItem * m_startField;
   CustomGraphicsItem * m_finishField;
+
 
   QMultiMap<int, QMap<int,CustomGraphicsItem*>> m_itemsScene;
   QMap<int, CustomGraphicsItem*> m_mapItemsScene;
@@ -53,6 +56,8 @@ private:
 
   int m_stepHeight;
   int m_stepWidth;
+
+  bool m_fieldPaint;
 
   bool m_pointStartExists;
   bool m_pointFinishExists;
