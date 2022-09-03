@@ -2,6 +2,8 @@
 #include "ui_findpathmain.h"
 
 #include <QMessageBox>
+#include <QGraphicsSimpleTextItem>
+
 
 FindPathMain::FindPathMain(QWidget *parent)
   : QMainWindow(parent)
@@ -50,7 +52,6 @@ void FindPathMain::on_pB_generate_clicked()
   {
     for(int j = 0; j < m_width; j++)
     {
-
       item = new CustomGraphicsItem;
       item->setRect(j*m_stepWidth, i*m_stepHeight, m_stepWidth, m_stepHeight);
       item->setNumber((i*m_width)+(j+1));
@@ -63,7 +64,6 @@ void FindPathMain::on_pB_generate_clicked()
   }
   randFillFields(m_width,m_height);
   fillSosedi();
-
 }
 
 void FindPathMain::randFillFields(int width, int height)
@@ -222,7 +222,7 @@ void FindPathMain::on_pB_findPath_clicked()
   connect(worker, &FindPathWorker::findPathFinished, threadWorker, &QThread::deleteLater);
   connect(worker, &FindPathWorker::findPathFinished, worker, &FindPathWorker::deleteLater);
 
-  connect(worker, &FindPathWorker::findError, threadWorker, &QThread::terminate);
+  connect(worker, &FindPathWorker::findError, threadWorker, &QThread::quit);
   connect(worker, &FindPathWorker::findError, threadWorker, &QThread::deleteLater);
   connect(worker, &FindPathWorker::findError, worker, &FindPathWorker::deleteLater);
 
@@ -234,29 +234,27 @@ void FindPathMain::on_pB_findPath_clicked()
 
 void FindPathMain::choosePoint(QPointF point)
 {
+  CustomGraphicsItem *item = m_itemsScene.value(point.y()/m_stepHeight).value(point.x()/m_stepWidth);
+  if(item->getObstacle())
+  {
+    QMessageBox::critical(this, "Ошибка", "Недопустимая точка, выберите другую");
+    return;
+  }
   if(!m_pointStartExists)
   {
-    CustomGraphicsItem *item = m_itemsScene.value(point.y()/m_stepHeight).value(point.x()/m_stepWidth);
-    if(item->getObstacle())
-    {
-      QMessageBox::critical(this, "Ошибка", "Недопустимая точка, выберите другую");
-      return;
-    }
     m_pointStartExists = true;
     m_startField = item;
     item->setBrush(QColor(255,221,30));
+    QGraphicsTextItem *textItem = scene->addText(tr("Начало"));
+    textItem->setPos(item->rect().bottomRight());
   }
   else if(!m_pointFinishExists)
   {
-    CustomGraphicsItem *item = m_itemsScene.value(point.y()/m_stepHeight).value(point.x()/m_stepWidth);
-    if(item->getObstacle())
-    {
-      QMessageBox::critical(this, "Ошибка", "Недопустимая точка, выберите другую");
-      return;
-    }
     m_pointFinishExists = true;
     m_finishField = item;
     item->setBrush(QColor(216,116,252));
+    QGraphicsTextItem *textItem = scene->addText(tr("Конец"));
+    textItem->setPos(item->rect().bottomRight());
   }
   else
   {

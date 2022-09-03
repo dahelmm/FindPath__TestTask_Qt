@@ -33,8 +33,6 @@ int CustomGraphicsItem::getParentInGraph() const
   return m_parentInGraph;
 }
 
-
-
 void CustomGraphicsItem::setObstacle(bool obstacle)
 {
   m_obstacle = obstacle;
