@@ -42,7 +42,6 @@ private:
 //  QGraphicsScene *scene;
   CustomGraphicsScene *scene;
   FindPathWorker*worker;
-  QThread *threadWorker;
 
   CustomGraphicsItem * m_startField;
   CustomGraphicsItem * m_finishField;
