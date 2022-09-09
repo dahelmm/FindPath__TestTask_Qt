@@ -29,9 +29,21 @@ FindPathMain::FindPathMain(QWidget *parent)
 FindPathMain::~FindPathMain()
 {
   if(scene)
-    delete scene;
+    scene->deleteLater();
   if(worker)
-    delete worker;
+  {
+    worker->quit();
+  }
+  if(threadWorker->isRunning())
+  {
+    threadWorker->exit();
+    while(!threadWorker->isFinished());
+  }
+  if(threadWorker)
+  {
+    threadWorker->deleteLater();
+    threadWorker = 0;
+  }
   delete ui;
 }
 
@@ -251,7 +263,8 @@ void FindPathMain::on_pB_findPath_clicked()
   worker->setStartParameters(m_mapItemsScene, m_startField, m_finishField);
   worker->moveToThread(threadWorker);
 
-  connect(threadWorker, &QThread::started, worker, &FindPathWorker::findPath);
+  connect(threadWorker, &QThread::started, worker, &FindPathWorker::start);
+  connect(worker, &FindPathWorker::started, worker, &FindPathWorker::findPath);
 
   connect(worker, &FindPathWorker::findError, this, &FindPathMain::findError);
   connect(worker, &FindPathWorker::findPathFinished, this, &FindPathMain::findParhFinished);
@@ -259,15 +272,9 @@ void FindPathMain::on_pB_findPath_clicked()
 
   connect(worker, &FindPathWorker::clearBlueFields, this, &FindPathMain::clearBlueFields);
 
-  connect(worker, &FindPathWorker::findError, worker, &FindPathWorker::deleteLater);
-  connect(worker, &FindPathWorker::findPathFinished, worker, &FindPathWorker::deleteLater);
-  connect(worker, &FindPathWorker::findPathFinishedOnePoint, worker, &FindPathWorker::deleteLater);
+  connect(worker, &FindPathWorker::finished, [this](){ worker->deleteLater(); worker = 0;});
 
-  connect(worker, &FindPathWorker::findError, threadWorker, &QThread::quit);
-  connect(worker, &FindPathWorker::findPathFinished, threadWorker, &QThread::quit);
-  connect(worker, &FindPathWorker::findPathFinishedOnePoint, threadWorker, &QThread::quit);
-
-  connect(threadWorker, &QThread::finished, [this](){threadWorker->deleteLater(); threadWorker = 0;});
+  connect(threadWorker, &QThread::finished, [this](){ threadWorker->deleteLater(); threadWorker = 0;});
 
   threadWorker->start();
 }
@@ -330,4 +337,3 @@ void FindPathMain::findPathFinishedOnePoint()
 {
   QMessageBox::information(this, tr("Конец"), tr("Точка конца отрезка в точке старта, путь найден"));
 }
-

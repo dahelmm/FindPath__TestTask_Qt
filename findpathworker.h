@@ -22,6 +22,8 @@ signals:
   void clearBlueFields(const QList<CustomGraphicsItem*>&);
   void findError();
   void findPathFinishedOnePoint();
+  void started();
+  void finished();
 
 public:
   explicit FindPathWorker(QObject *parent = nullptr);
@@ -31,6 +33,11 @@ public:
 
 public slots:
   void findPath();
+  void process();
+  void start() { process(); }
+  void exec() { m_running = true; emit started(); }
+  void quit();
+  bool isRunning() { return m_running; }
   void setStepWidth(int stepWidth);
   void setStepHeight(int stepHeight);
   void setStartParameters(QMap<int, CustomGraphicsItem *> &items, CustomGraphicsItem *start, CustomGraphicsItem *finish);
@@ -54,6 +61,8 @@ private:
   int m_stepWidth;
   int m_stepHeight;
   QMap<int,CustomGraphicsItem*> m_itemsScene;
+
+  bool m_running;
 };
 
 #endif // FINDPATHWORKER_H

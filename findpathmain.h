@@ -33,6 +33,7 @@ private slots:
   void findError();
   void clearBlueFields(const QList<CustomGraphicsItem*>&data);
   void findPathFinishedOnePoint();
+
 private:
   void randFillFields(int width, int height);
   void fillSosedi();

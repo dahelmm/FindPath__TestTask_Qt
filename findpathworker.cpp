@@ -12,6 +12,7 @@ FindPathWorker::FindPathWorker(QObject *parent) :
   m_queue.clear();
   m_path.clear();
   m_viewed.clear();
+
 }
 
 FindPathWorker::~FindPathWorker()
@@ -24,6 +25,7 @@ void FindPathWorker::findPath()
   if(m_startItem == m_finishItem)
   {
     emit findPathFinishedOnePoint();
+    quit();
     return;
   }
   m_queue.append(m_startItem);
@@ -51,10 +53,26 @@ void FindPathWorker::findPath()
         m_queue.enqueue(item);
       }
     }
-
     m_viewed.append(itemTmp);
   }
   emit findError();
+  quit();
+}
+
+void FindPathWorker::process()
+{
+  exec();
+  while(m_running)
+  {
+    QThread::msleep(50);
+    qApp->processEvents();
+  }
+  emit finished();
+}
+
+void FindPathWorker::quit()
+{
+  m_running = false;
 }
 
 void FindPathWorker::helpFunction(CustomGraphicsItem * currentItem)
@@ -68,6 +86,8 @@ void FindPathWorker::helpFunction(CustomGraphicsItem * currentItem)
   {
     emit clearBlueFields(m_fillFields);
     emit findPathFinished(m_path);
+    quit();
+    return;
   }
 }
 

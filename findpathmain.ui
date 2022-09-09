@@ -28,19 +28,6 @@
       </property>
      </spacer>
     </item>
-    <item row="3" column="0">
-     <spacer name="horizontalSpacer">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>73</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
     <item row="3" column="1">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
@@ -58,6 +45,26 @@
        </widget>
       </item>
      </layout>
+    </item>
+    <item row="2" column="5">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>568</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="0" column="5">
+     <widget class="QPushButton" name="pB_generate">
+      <property name="text">
+       <string>Генерировать</string>
+      </property>
+     </widget>
     </item>
     <item row="1" column="5">
      <widget class="QPushButton" name="pB_findPath">
@@ -88,25 +95,31 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="5">
-     <spacer name="verticalSpacer">
+    <item row="3" column="4">
+     <spacer name="horizontalSpacer_3">
       <property name="orientation">
-       <enum>Qt::Vertical</enum>
+       <enum>Qt::Horizontal</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
-        <width>20</width>
-        <height>568</height>
+        <width>73</width>
+        <height>20</height>
        </size>
       </property>
      </spacer>
     </item>
-    <item row="0" column="5">
-     <widget class="QPushButton" name="pB_generate">
-      <property name="text">
-       <string>Генерировать</string>
+    <item row="3" column="0">
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
       </property>
-     </widget>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>73</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
     </item>
     <item row="3" column="3">
      <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -125,19 +138,6 @@
        </widget>
       </item>
      </layout>
-    </item>
-    <item row="3" column="4">
-     <spacer name="horizontalSpacer_3">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>73</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
     </item>
    </layout>
   </widget>
